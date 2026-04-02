@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const UserSchema = new mongoose.Schema(
     {
@@ -53,20 +53,12 @@ const UserSchema = new mongoose.Schema(
 )
 
 // --- PASSWORD HASHING LOGIC ---
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function () {
     // Only hash the password if it has been modified (or is new)
     if (!this.isModified('password')) {
-        return next();
+        return ;
     }
-
-    try {
-        // Generate a salt and hash the password
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
-    }
+        this.password = await bcrypt.hash(this.password, 10);
 });
 
 
