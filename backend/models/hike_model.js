@@ -68,7 +68,7 @@ const HikeSchema = new mongoose.Schema(
                         time: {
                             type: String,
                             required: true,
-                            match: [/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, 'Please use the HH:MM AM/PM format (e.g., 02:00 AM)']
+                            match: [/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, 'Please use the HH:MM AM/PM format (e.g., 02:00 AM)']
                         },
                         details: {
                             type: String,
