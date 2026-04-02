@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const UserSchema = new mongoose.Schema(
     {
@@ -17,6 +18,10 @@ const UserSchema = new mongoose.Schema(
             required: [true, 'Email is required'],
             unique: true
         },
+        age: {
+            type: Number,
+            required: true
+        },
         username: {
             type: String,
             required: [true, 'Username is required'],
@@ -34,7 +39,7 @@ const UserSchema = new mongoose.Schema(
         phone_number: {
             type: String,
             required: [true, 'Phone number is required'],
-            match: [/^(09|\+639)\d{9}$/, 'Please enter a valid Philippine mobile number (e.g., 09123456789 or +639123456789)'],
+            match: [/^(09|\+639)\d{9}$/, 'Please enter a valid Philippine mobile number (e.g., 09123456789 or +639123456789)']
         },
         role: {
             type: String,
