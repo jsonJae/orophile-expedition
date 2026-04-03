@@ -8,6 +8,17 @@ function isValidSlots(value) {
     return value === companionCount + 1;
 }
 
+// function isValidSlots(value) {
+//     // FIXED: Handle 'this' context for Mongoose updates
+//     let companionArray = this.companions;
+//     if (this.constructor.name === 'Query') {
+//         companionArray = this.get('companions');
+//     }
+    
+//     const companionCount = companionArray ? companionArray.length : 0;
+//     return value === companionCount + 1;
+// }
+
 const BookingSchema = new mongoose.Schema(
     {
         user:{
@@ -50,7 +61,7 @@ const BookingSchema = new mongoose.Schema(
                     type: Number,
                     required: true
                 },
-                contact: {
+                phone_number: {
                     type: String,
                     required: [true, 'Phone number is required'],
                     match: [/^(09|\+639)\d{9}$/, 'Please enter a valid Philippine mobile number (e.g., 09123456789 or +639123456789)']
@@ -97,6 +108,47 @@ BookingSchema.pre('save', async function(next) {
         next();
     }
 });
+
+
+// BookingSchema.pre('save', async function(next) {
+//     if (this.isNew || this.isModified('slots_reserved')) {
+//         try {
+//             // Fetch price AND capacity
+//             const tripDoc = await Hike.findById(this.trip).select('price capacity'); 
+
+//             if (!tripDoc) {
+//                 throw new Error('Associated Trip not found.');
+//             }
+
+//             // FIXED: Prevent Overbooking!
+//             // Query the Booking model to see how many slots are already taken for this trip
+//             const BookingModel = mongoose.model('Booking'); 
+//             const existingBookings = await BookingModel.aggregate([
+//                 { $match: { trip: this.trip, booking_status: { $ne: 'Cancelled' } } },
+//                 { $group: { _id: null, totalBooked: { $sum: '$slots_reserved' } } }
+//             ]);
+
+//             const currentTotal = existingBookings.length > 0 ? existingBookings[0].totalBooked : 0;
+            
+//             // If updating an existing booking, subtract the old slots so we don't double count
+//             const previouslyReserved = this.isNew ? 0 : (await BookingModel.findById(this._id)).slots_reserved;
+//             const newTotalSlots = (currentTotal - previouslyReserved) + this.slots_reserved;
+
+//             if (newTotalSlots > tripDoc.capacity) {
+//                 const slotsLeft = tripDoc.capacity - (currentTotal - previouslyReserved);
+//                 throw new Error(`Booking failed: Hike capacity exceeded. Only ${slotsLeft} slots remaining.`);
+//             }
+
+//             // If we pass the capacity check, calculate the price
+//             this.total_price = tripDoc.price * this.slots_reserved;
+//             next();
+//         } catch (error) {
+//             next(error); 
+//         }
+//     } else {
+//         next();
+//     }
+// });
 
 const Booking = mongoose.model('Booking', BookingSchema);
 export default Booking;
