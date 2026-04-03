@@ -1,4 +1,5 @@
 import User from '../models/user_model.js';
+
 const getUserProfile = async (req, res) => {
 
     try{
@@ -70,5 +71,21 @@ const updateProfile = async (req,res) => {
     }
 }
 
+const getAllUsers = async (req,res) => {
 
-export {getUserProfile, updatePassword, updateProfile};
+    try{
+        const users = await User.find();
+
+        if(!users){
+            return res.status(400).json({ message: "No users available"});
+        }
+
+        res.status(200).json({ success: true, users: users});
+
+    }catch(error){
+
+    }
+
+}
+
+export {getUserProfile, updatePassword, updateProfile, getAllUsers};

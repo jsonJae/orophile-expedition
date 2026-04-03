@@ -1,6 +1,6 @@
 import express from 'express';
 import { verifyToken, isAdmin } from '../middleware/auth_middleware.js';
-import { getUserProfile, updatePassword, updateProfile } from '../controllers/user_controller.js'; 
+import { getUserProfile, updatePassword, updateProfile, getAllUsers } from '../controllers/user_controller.js'; 
 const router = express.Router()
 
 router.get("/user", (req, res) => {
@@ -9,6 +9,7 @@ router.get("/user", (req, res) => {
 
 
 router.get("/user/profile", verifyToken, getUserProfile);
+router.get("/", verifyToken, isAdmin, getAllUsers)
 router.put("/update-password", verifyToken, updatePassword);
 router.put("/update-profile", verifyToken, updateProfile);
 
