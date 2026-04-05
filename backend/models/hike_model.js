@@ -29,6 +29,22 @@ const HikeSchema = new mongoose.Schema(
             type: String,
             enum: ['Minor', 'Major']
         },
+        location: [
+            {
+                place: {
+                    type: String,
+                    required: true
+                },
+                latitude: {
+                    type: String,
+                    required: true
+                },
+                longitude: {
+                    type: String,
+                    required: true
+                }
+            }
+        ],
         start_date: {
             type: Date,
             required: true
@@ -54,6 +70,7 @@ const HikeSchema = new mongoose.Schema(
         },
         status: {
             type: String,
+            required: true,
             enum: ['Upcoming', 'Completed', 'Cancelled'],
             default: 'Upcoming'
         },
@@ -78,6 +95,7 @@ const HikeSchema = new mongoose.Schema(
                 ]
             }
         ],
+        pickup_points: [String],
         inclusions: [String],
         exclusions: [String],
     },
