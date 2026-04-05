@@ -29,7 +29,7 @@ const updatePassword = async (req,res) => {
 
         user.password = newPassword;
 
-        user.save();
+        await user.save();
 
         res.status(200).json({updated: true, message: "Password updated", })
 
@@ -74,16 +74,29 @@ const updateProfile = async (req,res) => {
 const getAllUsers = async (req,res) => {
 
     try{
-        const users = await User.find();
+        const sortBy = req.sorting
+        const { page, limit, skip, totalUsers, totalPages} = req.pagination
 
-        if(!users){
-            return res.status(400).json({ message: "No users available"});
-        }
+        const users = await 
+            User.find({role: "user"})
+                .sort(sortBy)
+                .skip(skip)
+                .limit(limit)
 
-        res.status(200).json({ success: true, users: users});
-
+        res.status(200).json(
+            {
+                success: true, 
+                users: users,
+                page: page,
+                limit: limit,
+                skip: skip,
+                totalUsers: totalUsers,
+                totalPages: totalPages,
+                sortBy: sortBy
+            }
+        )
     }catch(error){
-
+        res.status(500).json({error: error.message});
     }
 
 }
