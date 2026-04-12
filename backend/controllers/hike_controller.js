@@ -66,6 +66,33 @@ const getHike = async (req,res) => {
     }
 }
 
+const deleteHike = async (req,res) => {
+
+    try{
+
+        const { id } = req.params;
+    
+        const hike = await Hike.findById(id);
+
+        if(!hike){
+            return res.status(400).json({message: "No hike available"});
+        }
+
+        const deletedHike = await Hike.findByIdAndDelete(id);
+
+        res.status(200).json({success: true, deleted_hike: {
+            title: deletedHike.title,
+            start_date: deletedHike.start_date,
+            end_date: deletedHike.end_date,
+            }
+        });
+
+    }catch(error){
+        res.status(500).json({error: error})
+    }
+    
+}
+
 const updateHike = async (req, res) => {
     try {
         const { id } = req.params;
@@ -102,4 +129,4 @@ const updateHike = async (req, res) => {
 
 
 
-export { getAllHikes, createHike, getHike, updateHike };
+export { getAllHikes, createHike, getHike, updateHike, deleteHike };
