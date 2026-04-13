@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import User from '../models/user_model.js';
 
 const getUserProfile = async (req, res) => {
@@ -71,6 +72,40 @@ const updateProfile = async (req,res) => {
     }
 }
 
+const deleteAccount = async (req,res) => {
+    try{
+        const user = await User.findById(req.user.id).select('+password');
+
+        if(!user){
+            return res.status(400).json({message: "No user found"});
+        }
+
+        const { password } = req.body;
+        const isMatch = await bcrypt.compare(password, user.password);
+        
+        if(!isMatch){
+            return res.status(400).json({message: "Wrong password"});
+        }
+
+        const deletedUser = await User.findByIdAndDelete(req.user.id);
+
+        if(!deletedUser){
+            return res.status(400).json({success: false, message: "Failed to delete user. No user found."});
+        }
+
+        res.status(200).json(
+            {success: true, 
+            message: "Successfully deleted your account", 
+            deletedUser: {
+                name: deletedUser.name.first_name + " " + deletedUser.name.last_name
+            }
+        });
+
+    }catch(error){
+        res.status(500).json({error: error.message});
+    }
+}
+
 const getAllUsers = async (req,res) => {
 
     try{
@@ -101,4 +136,40 @@ const getAllUsers = async (req,res) => {
 
 }
 
-export {getUserProfile, updatePassword, updateProfile, getAllUsers};
+const deleteUser = async (req,res) => {
+
+    try{
+        const { id } = req.params;
+        const user = await User.findById(id);
+
+        if(!user){
+            return res.status(400).json({message: "User not found. "});
+        }
+
+        const { confirmation } = req.body;
+
+        if(!confirmation){
+            return res.status(400).json({message: "No confirmation message. "});
+        }
+
+        if(confirmation !== "confirm user deletion"){
+            return res.status(400).json({message: "Wrong confirmation message. "});
+        }
+        
+        const deletedUser = await User.findByIdAndDelete(req.params.id)
+
+        res.status(200).json({success: true, 
+            message: "Successfully deleted user. ",
+            deletedUser: {
+                id: id,
+                name: deletedUser.name.first_name + " " + deletedUser.name.last_name
+            }
+        })
+
+    }catch(error){
+        return res.status(500).json({error : error.message });
+    }
+
+}
+
+export {getUserProfile, updatePassword, updateProfile, deleteAccount, getAllUsers, deleteUser};
