@@ -5,7 +5,7 @@ import authApi from '../api/authApi.js'
 const LoginForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState(null);
+    const [errorMessage, setError] = useState(null);
     const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e) => {
@@ -23,7 +23,7 @@ const LoginForm = () => {
             }
 
         } catch (err) {
-            setError(err.response?.data?.message || "An unexpected error occurred.");    
+            toast.error(err.response?.data?.message || "An unexpected error occurred.");
         } finally {
             setLoading(false);
         }
@@ -71,12 +71,6 @@ const LoginForm = () => {
                                     className='font-opensans bg-[#BFBDB8]/10 border border-secondary focus:outline-none focus:border-accent text-sm px-3 py-2.5 rounded-md shadow-gray-400 shadow-xs'
                                 />
                             </div>
-                            {/* This is the part that makes the error visible to the user */}
-                                {error && (
-                                    <div style={{ color: 'red', marginBottom: '10px' }}>
-                                        {error}
-                                    </div>
-                            )}
 
                             <div className='flex flex-row justify-end pr-2 mt-1'>
                                 <Link className='font-opensans font-semibold text-xs text-accent underline hover:brightness-80 transition-all'>
@@ -109,10 +103,7 @@ const LoginForm = () => {
                     </p>
                 </div>
             </div>
-
         </div>
-
-        
     )
 }
 
