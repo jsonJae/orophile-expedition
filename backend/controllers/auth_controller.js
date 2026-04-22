@@ -11,7 +11,6 @@ const register = async (req,res) => {
             username,
             password,
             phone_number,
-            role
         } = req.body
 
         const existingUser = await User.findOne({email});
@@ -28,7 +27,6 @@ const register = async (req,res) => {
                 username,
                 password,
                 phone_number,
-                role
             }
         )
 
@@ -71,13 +69,13 @@ const login = async (req,res) => {
     const user = await User.findOne({ email }).select('+password');
     
     if(!user){
-        return res.status(404).json({ login: false, message: `Invalid Credentials` });
+        return res.status(401).json({ login: false, message: `Invalid Credentials` });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if(!isMatch){
-        return res.status(400).json({ login: false, message: 'Invalid Credentials' });
+        return res.status(401).json({ login: false, message: 'Invalid Credentials' });
     }
 
     const token = jwt.sign(
@@ -98,7 +96,7 @@ const login = async (req,res) => {
         res.status(500).json(
             {
                 login: false,
-                message: 'Something went wrong ont the server', 
+                message: 'Something went wrong on the server', 
                 error: error.message
             });
     }
