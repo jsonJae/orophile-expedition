@@ -4,12 +4,12 @@ import LoginHero from  '../features/auth/components/LoginHero.jsx'
 
 const LoginPage = () => {
     return (
-        <div className='grid grid-cols-5 w-full h-screen overflow-hidden'>
-            <div className='col-span-3'>
+        <div className='grid grid-cols-2 w-full h-screen overflow-hidden'>
+            <div>
                 <LoginHero/>
             </div>
 
-            <div className='col-span-2'>
+            <div>
                 <LoginForm/>
             </div>
 

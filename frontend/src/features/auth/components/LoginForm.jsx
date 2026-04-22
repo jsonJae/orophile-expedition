@@ -33,10 +33,10 @@ const LoginForm = () => {
         <div className='flex flex-col items-center justify-center bg-background h-screen'>
             <div className='flex flex-col w-1/2 gap-2'>
                 <div className='flex flex-col gap-1.5'>
-                    <p className='font-poppins font-bold text-secondary text-4xl'>
+                    <p className='font-poppins font-bold text-secondary text-5xl'>
                         Welcome Back, Trailblazer!
                     </p>
-                    <p className='font-opensans text-[#1A202C] text-sm'>
+                    <p className='font-opensans text-[#1A202C] text-base'>
                         Log in to book upcoming hiking expeditions.
                     </p>
                 </div>
